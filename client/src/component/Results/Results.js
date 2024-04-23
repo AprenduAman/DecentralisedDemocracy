@@ -165,8 +165,30 @@ function displayWinner(candidates) {
       </div>
     );
   };
+  const renderDraw = (winner) => {
+    return (
+      <div className="container-winner">
+        <div className="winner-info">
+          <p className="winner-tag">Draw!</p>
+          <h2> {winner.header}</h2>
+          <p className="winner-slogan">{winner.slogan}</p>
+        </div>
+        <div className="winner-votes">
+          <div className="votes-tag">Total Votes: </div>
+          <div className="vote-count">{winner.voteCount}</div>
+        </div>
+      </div>
+    );
+  };
   const winnerCandidate = getWinner(candidates);
-  return <>{winnerCandidate.map(renderWinner)}</>;
+  if(winnerCandidate.length > 1) {
+    return <>{winnerCandidate.map(renderDraw)}</>;
+
+  }else{
+    return <>{winnerCandidate.map(renderWinner)}</>;
+
+  }
+  
 }
 
 export function displayResults(candidates) {
