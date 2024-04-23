@@ -26,13 +26,13 @@ export default class Registration extends Component {
       voterCount: undefined,
       voterName: "",
       voterPhone: "",
-      voterAdhar: "",
+      voterAadhar: "",
       voters: [],
       currentVoter: {
         address: undefined,
         name: null,
         phone: null,
-        adhar: null,
+        aadhar: null,
         hasVoted: false,
         isVerified: false,
         isRegistered: false,
@@ -99,7 +99,7 @@ export default class Registration extends Component {
           address: voter.voterAddress,
           name: voter.name,
           phone: voter.phone,
-          adhar: voter.adhar,
+          aadhar: voter.aadhar,
           hasVoted: voter.hasVoted,
           isVerified: voter.isVerified,
           isRegistered: voter.isRegistered,
@@ -116,7 +116,7 @@ export default class Registration extends Component {
           address: voter.voterAddress,
           name: voter.name,
           phone: voter.phone,
-          adhar: voter.adhar,
+          aadhar: voter.aadhar,
           hasVoted: voter.hasVoted,
           isVerified: voter.isVerified,
           isRegistered: voter.isRegistered,
@@ -136,12 +136,12 @@ export default class Registration extends Component {
   updateVoterPhone = (event) => {
     this.setState({ voterPhone: event.target.value });
   };
-  updateVoterAdhar = (event) => {
-    this.setState({ voterAdhar: event.target.value });
+  updateVoterAadhar = (event) => {
+    this.setState({ voterAadhar: event.target.value });
   };
   registerAsVoter = async () => {
     await this.state.ElectionInstance.methods
-      .registerAsVoter(this.state.voterName, this.state.voterPhone, this.state.voterAdhar)
+      .registerAsVoter(this.state.voterName, this.state.voterPhone, this.state.voterAadhar)
       .send({ from: this.state.account, gas: 1000000 });
     window.location.reload();
   };
@@ -206,13 +206,13 @@ export default class Registration extends Component {
                   </div>
                   <div className="div-li">
                     <label className={"label-r"}>
-                      Adhar <span style={{ color: "tomato" }}>*</span>
+                      AadharCard No. <span style={{ color: "tomato" }}>*</span>
                       <input
                         className={"input-r"}
                         type="number"
                         placeholder="eg. 9841234567"
-                        value={this.state.voterAdhar}
-                        onChange={this.updateVoterAdhar}
+                        value={this.state.voterAadhar}
+                        onChange={this.updateVoterAadhar}
                       />
                     </label>
                   </div>
@@ -227,6 +227,7 @@ export default class Registration extends Component {
                     className="btn-add"
                     disabled={
                       this.state.voterPhone.length !== 10 ||
+                      this.state.voterAadhar.length !== 16 ||
                       this.state.currentVoter.isVerified
                     }
                     onClick={this.registerAsVoter}
@@ -291,8 +292,8 @@ export function loadCurrentVoter(voter, isRegistered) {
             <td>{voter.phone}</td>
           </tr>
           <tr>
-            <th>Adhar</th>
-            <td>{voter.adhar}</td>
+            <th>AadharCard No.</th>
+            <td>{voter.aadhar}</td>
           </tr>
           <tr>
             <th>Voted</th>
@@ -330,8 +331,8 @@ export function loadAllVoters(voters) {
               <td>{voter.phone}</td>
             </tr>
             <tr>
-              <th>Adhar</th>
-              <td>{voter.adhar}</td>
+              <th>AadharCard No.</th>
+              <td>{voter.aadhar}</td>
             </tr>
             <tr>
               <th>Voted</th>
