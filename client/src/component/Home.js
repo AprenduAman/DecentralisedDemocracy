@@ -190,13 +190,13 @@ export default class Home extends Component {
       };
 
       return (
-        <div>
+        <div className="outer-div">
           <form onSubmit={handleSubmit(onSubmit)}>
             {!this.state.elStarted & !this.state.elEnded ? (
               <div className="container-main">
                 {/* about-admin */}
                 <div className="about-admin">
-                  <h3>About Admin</h3>
+                  <h2>About Admin</h2>
                   <div className="container-item center-items">
                     <div>
                       <label className="label-home">
@@ -243,7 +243,7 @@ export default class Home extends Component {
                         <input
                           className="input-home"
                           type="text"
-                          placeholder="eg. HR Head "
+                          placeholder="eg. Election Commissioner "
                           {...register("adminTitle", {
                             required: true,
                           })}
@@ -254,7 +254,7 @@ export default class Home extends Component {
                 </div>
                 {/* about-election */}
                 <div className="about-election">
-                  <h3>About Election</h3>
+                  <h2>About Election</h2>
                   <div className="container-item center-items">
                     <div>
                       <label className="label-home">
@@ -263,7 +263,7 @@ export default class Home extends Component {
                         <input
                           className="input-home"
                           type="text"
-                          placeholder="eg. School Election"
+                          placeholder="eg. Loksabha Election"
                           {...register("electionTitle", {
                             required: true,
                           })}
@@ -275,7 +275,7 @@ export default class Home extends Component {
                         <input
                           className="input-home"
                           type="text"
-                          placeholder="eg. Lifeline Academy"
+                          placeholder="eg. Election Organization "
                           {...register("organizationTitle", {
                             required: true,
                           })}

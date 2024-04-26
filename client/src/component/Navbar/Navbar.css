@@ -11,7 +11,7 @@ a {
 nav {
   display: flex;
   height: 11vh;
-  background: tomato;
+  background: rgb(19, 154, 175);
   justify-content: space-around;
   position: sticky;
   top: 0;
@@ -39,7 +39,7 @@ nav .navbar-links a {
 }
 nav .navbar-links a:hover {
   cursor: pointer;
-  color: black;
+  color: rgb(0, 0, 0);
 }
 nav .burger-menu {
   font-size: 24px;
@@ -56,14 +56,15 @@ nav .burger-menu {
     display: block;
   }
   nav .navbar-links {
-    background-color: tomato;
+    background-color: rgb(19, 154, 175);
     display: block;
     width: 50%;
     position: absolute;
     top: 100%;
     left: 0;
     padding: 0px;
-    transform: translate(-700px);
+    transform: translateX(-700px);
+    transition: transform 0.3s ease-in-out;
   }
   nav .navbar-links li {
     padding: 25px;

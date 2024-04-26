@@ -9,12 +9,12 @@ export default function NavbarAdmin() {
     <nav>
       <div className="header">
         <NavLink to="/">
-          <i className="fab fa-hive" /> Admin
+          <i className="fas fa-poll" /> Admin
         </NavLink>
       </div>
       <ul
         className="navbar-links"
-        style={{ transform: open ? "translateX(0px)" : "" }}
+        style={{ transform: open ? "translateX(-700px)" : "translateX(0px)" }}
       >
         <li>
           <NavLink to="/Verification" activeClassName="nav-active">
