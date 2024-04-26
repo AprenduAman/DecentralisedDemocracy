@@ -13,3 +13,11 @@
   display: block;
   margin-bottom: 11px;
 }
+
+.about-admin h2 {
+  text-align: center;
+}
+
+.about-election h2 {
+  text-align: center;
+}
