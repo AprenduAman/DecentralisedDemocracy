@@ -196,24 +196,30 @@ export default class Registration extends Component {
                     <label className={"label-r"}>
                       Phone number <span style={{ color: "tomato" }}>*</span>
                       <input
-                        className={"input-r"}
+                        className={`input-r ${this.state.voterPhone.length !== 10 ? 'error' : ''}`}
                         type="number"
                         placeholder="eg. 9841234567"
                         value={this.state.voterPhone}
                         onChange={this.updateVoterPhone}
                       />
+                      {this.state.voterPhone.length !== 10 && (
+                        <span className="error-message">Phone number must be 10 digits</span>
+                      )}
                     </label>
                   </div>
                   <div className="div-li">
                     <label className={"label-r"}>
                       AadharCard No. <span style={{ color: "tomato" }}>*</span>
                       <input
-                        className={"input-r"}
+                        className={`input-r ${this.state.voterAadhar.length !== 16 ? 'error' : ''}`}
                         type="number"
-                        placeholder="eg. 9841234567"
+                        placeholder="eg. 1234567890123456"
                         value={this.state.voterAadhar}
                         onChange={this.updateVoterAadhar}
                       />
+                      {this.state.voterAadhar.length !== 16 && (
+                        <span className="error-message">Aadhar card number must be 16 digits</span>
+                      )}
                     </label>
                   </div>
                   <p className="note">

@@ -28,3 +28,23 @@
   overflow: auto;
   line-height: 1.5em;
 }
+
+/* Style for error messages */
+.error-message {
+  color: red;
+  font-size: small;
+}
+
+/* Style for input boxes with red border on error */
+.input-r {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s ease-in-out;
+}
+
+/* Style for input boxes with red border when error occurs */
+.input-r.error {
+  border-color: red;
+}
