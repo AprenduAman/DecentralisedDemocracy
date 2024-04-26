@@ -97,7 +97,7 @@ export default class AddCandidate extends Component {
     await this.state.ElectionInstance.methods
       .addCandidate(this.state.header, this.state.slogan)
       .send({ from: this.state.account, gas: 1000000 });
-    window.location.reload();
+      this.componentDidMount();
   };
 
   render() {

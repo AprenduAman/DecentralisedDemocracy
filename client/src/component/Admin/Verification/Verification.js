@@ -20,6 +20,7 @@ export default class Registration extends Component {
       isAdmin: false,
       voterCount: undefined,
       voters: [],
+      registerCount: undefined,
     };
   }
 
@@ -60,27 +61,34 @@ export default class Registration extends Component {
         this.setState({ isAdmin: true });
       }
       // Total number of voters
-      const voterCount = await this.state.ElectionInstance.methods
-        .getTotalVoter()
+      const registerCount = await this.state.ElectionInstance.methods
+        .getRegisterVoter()
         .call();
-      this.setState({ voterCount: voterCount });
+      this.setState({ registerCount: registerCount });
       // Loading all the voters
-      for (let i = 0; i < this.state.voterCount; i++) {
+      for (let i = 0; i < this.state.registerCount; i++) {
         const voterAddress = await this.state.ElectionInstance.methods
           .voters(i)
           .call();
-        const voter = await this.state.ElectionInstance.methods
-          .voterDetails(voterAddress)
-          .call();
-        this.state.voters.push({
-          address: voter.voterAddress,
-          name: voter.name,
-          phone: voter.phone,
-          aadhar: voter.aadhar,
-          hasVoted: voter.hasVoted,
-          isVerified: voter.isVerified,
-          isRegistered: voter.isRegistered,
-        });
+        
+        
+        const existingVoter = this.state.voters.find(voter => voter.address === voterAddress);
+        
+        if (!existingVoter) {
+          const voter = await this.state.ElectionInstance.methods
+            .voterDetails(voterAddress)
+            .call();
+          
+          this.state.voters.push({
+            address: voter.voterAddress,
+            name: voter.name,
+            phone: voter.phone,
+            aadhar: voter.aadhar,
+            hasVoted: voter.hasVoted,
+            isVerified: voter.isVerified,
+            isRegistered: voter.isRegistered,
+          });
+        }
       }
       this.setState({ voters: this.state.voters });
     } catch (error) {
@@ -188,7 +196,7 @@ export default class Registration extends Component {
         <NavbarAdmin />
         <div className="container-main">
           <h3>Verification</h3>
-          <small>Total Voters: {this.state.voters.length}</small>
+          <small>Total Registered Voters: {this.state.voters.length}</small>
           {this.state.voters.length < 1 ? (
             <div className="container-item info">None has registered yet.</div>
           ) : (
