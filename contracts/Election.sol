@@ -5,6 +5,7 @@ contract Election {
     address public admin;
     uint256 candidateCount;
     uint256 voterCount;
+    uint256 registerCount;
     bool start;
     bool end;
 
@@ -13,6 +14,7 @@ contract Election {
         admin = msg.sender;
         candidateCount = 0;
         voterCount = 0;
+        registerCount = 0;
         start = false;
         end = false;
     }
@@ -112,6 +114,11 @@ contract Election {
         // Returns total number of voters
         return voterCount;
     }
+    // Get register count
+    function getRegisterVoter() public view returns (uint256) {
+        // Returns total number of register voters
+        return registerCount;
+    }
 
     // Modeling a voter
     struct Voter {
@@ -140,7 +147,7 @@ contract Election {
             });
         voterDetails[msg.sender] = newVoter;
         voters.push(msg.sender);
-        voterCount += 1;
+        registerCount +=1;
     }
 
     // Verify voter
@@ -150,6 +157,7 @@ contract Election {
         onlyAdmin
     {
         voterDetails[voterAddress].isVerified = _verifedStatus;
+        voterCount += 1;
     }
 
     // Vote

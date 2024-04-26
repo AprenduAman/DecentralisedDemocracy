@@ -162,7 +162,7 @@ export default class Registration extends Component {
         ) : (
           <>
             <div className="container-item info">
-              <p>Total registered voters: {this.state.voters.length}</p>
+              <p>Total Verified voters: {this.state.voters.length}</p>
             </div>
             <div className="container-main">
               <h3>Registration</h3>
