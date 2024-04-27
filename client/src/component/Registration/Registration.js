@@ -139,12 +139,29 @@ export default class Registration extends Component {
   updateVoterAadhar = (event) => {
     this.setState({ voterAadhar: event.target.value });
   };
+  // registerAsVoter = async () => {
+  //   await this.state.ElectionInstance.methods
+  //     .registerAsVoter(this.state.voterName, this.state.voterPhone, this.state.voterAadhar)
+  //     .send({ from: this.state.account, gas: 1000000 });
+  //   window.location.reload();
+  // };
   registerAsVoter = async () => {
+    // Check if the Aadhar card number is already registered
+    const isAadharRegistered = await this.state.ElectionInstance.methods
+        .isAadharRegistered(this.state.voterAadhar)
+        .call();
+
+    if (isAadharRegistered) {
+        alert("Aadhar card number is already registered.");
+        return;
+    }
+
+    // Proceed with registration if the Aadhar card number is not registered
     await this.state.ElectionInstance.methods
-      .registerAsVoter(this.state.voterName, this.state.voterPhone, this.state.voterAadhar)
-      .send({ from: this.state.account, gas: 1000000 });
+        .registerAsVoter(this.state.voterName, this.state.voterPhone, this.state.voterAadhar)
+        .send({ from: this.state.account, gas: 1000000 });
     window.location.reload();
-  };
+};
   render() {
     if (!this.state.web3) {
       return (
