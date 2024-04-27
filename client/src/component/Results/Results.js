@@ -1,6 +1,8 @@
 // Node modules
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import 'react-notifications/lib/notifications.css';
+import { NotificationManager, NotificationContainer } from "react-notifications";
 
 // Components
 import Navbar from "../Navbar/Navigation";
@@ -87,9 +89,7 @@ export default class Result extends Component {
       }
     } catch (error) {
       // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`
-      );
+      NotificationManager.error("Failed to load web3, accounts, or contract. Check console for details.","error",10000);
       console.error(error);
     }
   };
@@ -100,6 +100,7 @@ export default class Result extends Component {
         <>
           {this.state.isAdmin ? <NavbarAdmin /> : <Navbar />}
           <center>Loading Web3, accounts, and contract...</center>
+          <NotificationContainer/>
         </>
       );
     }
