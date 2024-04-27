@@ -7,6 +7,8 @@ import AdminOnly from "../../AdminOnly";
 
 import getWeb3 from "../../../getWeb3";
 import Election from "../../../contracts/Election.json";
+import 'react-notifications/lib/notifications.css';
+import { NotificationManager, NotificationContainer } from "react-notifications";
 
 import "./Verification.css";
 
@@ -93,9 +95,7 @@ export default class Registration extends Component {
       this.setState({ voters: this.state.voters });
     } catch (error) {
       // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`
-      );
+      NotificationManager.error("Failed to load web3, accounts, or contract. Check console for details.","error",10000);
       console.error(error);
     }
   };
@@ -104,7 +104,10 @@ export default class Registration extends Component {
       await this.state.ElectionInstance.methods
         .verifyVoter(verifiedStatus, address)
         .send({ from: this.state.account, gas: 1000000 });
-      window.location.reload();
+        NotificationManager.success("Success ","Approved!",5000);
+        setTimeout(function() {
+          window.location.reload();
+      }, 2400);
     };
     return (
       <>
@@ -171,6 +174,7 @@ export default class Registration extends Component {
             </button>
           </div>
         </div>
+        <NotificationContainer/>
       </>
     );
   };
@@ -180,6 +184,7 @@ export default class Registration extends Component {
         <>
           {this.state.isAdmin ? <NavbarAdmin /> : <Navbar />}
           <center>Loading Web3, accounts, and contract...</center>
+          <NotificationContainer/>
         </>
       );
     }
@@ -208,6 +213,7 @@ export default class Registration extends Component {
             </>
           )}
         </div>
+        <NotificationContainer/>
       </>
     );
   }

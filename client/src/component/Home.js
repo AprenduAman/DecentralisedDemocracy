@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { NotificationManager, NotificationContainer } from "react-notifications";
 
 // Components
 import Navbar from "./Navbar/Navigation";
@@ -88,21 +89,26 @@ export default class Home extends Component {
       });
     } catch (error) {
       // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`
-      );
+      NotificationManager.error("Failed to load web3, accounts, or contract. Check console for details.","error",50000);
+      
       console.error(error);
     }
   };
   // end election
-  endElection = async () => {
+  endElection = async (e) => {
+    e.preventDefault();
+
     await this.state.ElectionInstance.methods
       .endElection()
       .send({ from: this.state.account, gas: 1000000 });
-    window.location.reload();
+      NotificationManager.success("Election Ended ","Ended",5000);
+      setTimeout(function() {
+        window.location.reload();
+    }, 2000);    
   };
   // register and start election
   registerElection = async (data) => {
+    
     await this.state.ElectionInstance.methods
       .setElectionDetails(
         data.adminFName.toLowerCase() + " " + data.adminLName.toLowerCase(),
@@ -112,7 +118,11 @@ export default class Home extends Component {
         data.organizationTitle.toLowerCase()
       )
       .send({ from: this.state.account, gas: 1000000 });
-    window.location.reload();
+      NotificationManager.success("Election Started ","Started",5000);
+   
+    setTimeout(function() {
+      window.location.reload();
+  }, 2000);
   };
 
   render() {
@@ -168,6 +178,7 @@ export default class Home extends Component {
             </div>
           </>
         ) : null}
+        <NotificationContainer/>
       </>
     );
   }
@@ -298,6 +309,7 @@ export default class Home extends Component {
               elEnded={this.state.elEnded}
             />
           </form>
+          <NotificationContainer/>
         </div>
       );
     };

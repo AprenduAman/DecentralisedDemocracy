@@ -2,12 +2,12 @@ import React, { Component } from "react";
 
 import Navbar from "../../Navbar/Navigation";
 import NavbarAdmin from "../../Navbar/NavigationAdmin";
-
+import { NotificationManager, NotificationContainer } from "react-notifications";
 import AdminOnly from "../../AdminOnly";
 
 import getWeb3 from "../../../getWeb3";
 import Election from "../../../contracts/Election.json";
-
+import 'react-notifications/lib/notifications.css';
 import "./StartEnd.css";
 
 export default class StartEnd extends Component {
@@ -65,24 +65,26 @@ export default class StartEnd extends Component {
       this.setState({ elEnded: end });
     } catch (error) {
       // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`
-      );
+      NotificationManager.error("Failed to load web3, accounts, or contract. Check console for details.","error",10000);
       console.error(error);
     }
   };
 
-  startElection = async () => {
+  startElection = async (e) => {
+    e.preventDefault();
     await this.state.ElectionInstance.methods
       .startElection()
       .send({ from: this.state.account, gas: 1000000 });
-    window.location.reload();
+      NotificationManager.success("Election Started ","Started",5000);
+    this.componentDidMount();
   };
-  endElection = async () => {
+  endElection = async (e) => {
+    e.preventDefault();
     await this.state.ElectionInstance.methods
       .endElection()
       .send({ from: this.state.account, gas: 1000000 });
-    window.location.reload();
+      NotificationManager.success("Election Ended ","Ended",5000);
+    this.componentDidMount();
   };
 
   render() {
@@ -91,6 +93,7 @@ export default class StartEnd extends Component {
         <>
           {this.state.isAdmin ? <NavbarAdmin /> : <Navbar />}
           <center>Loading Web3, accounts, and contract...</center>
+          <NotificationContainer/>
         </>
       );
     }
@@ -146,6 +149,7 @@ export default class StartEnd extends Component {
             <p>Ended: {this.state.elEnded ? "True" : "False"}</p>
           </div>
         </div>
+        <NotificationContainer/>
       </>
     );
   }

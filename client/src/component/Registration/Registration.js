@@ -5,10 +5,10 @@ import React, { Component } from "react";
 import Navbar from "../Navbar/Navigation";
 import NavbarAdmin from "../Navbar/NavigationAdmin";
 import NotInit from "../NotInit";
-
+import { NotificationManager, NotificationContainer} from "react-notifications";
 // CSS
 import "./Registration.css";
-
+import 'react-notifications/lib/notifications.css';
 // Contract
 import getWeb3 from "../../getWeb3";
 import Election from "../../contracts/Election.json";
@@ -38,6 +38,7 @@ export default class Registration extends Component {
         isRegistered: false,
       },
     };
+    this.handleReload = this.handleReload.bind(this);
   }
 
   // refreshing once
@@ -81,55 +82,57 @@ export default class Registration extends Component {
       const end = await this.state.ElectionInstance.methods.getEnd().call();
       this.setState({ isElEnded: end });
 
-      // Total number of voters
-      const voterCount = await this.state.ElectionInstance.methods
-        .getTotalVoter()
-        .call();
-      this.setState({ voterCount: voterCount });
-
-      // Loading all the voters
-      for (let i = 0; i < this.state.voterCount; i++) {
-        const voterAddress = await this.state.ElectionInstance.methods
-          .voters(i)
-          .call();
-        const voter = await this.state.ElectionInstance.methods
-          .voterDetails(voterAddress)
-          .call();
-        this.state.voters.push({
-          address: voter.voterAddress,
-          name: voter.name,
-          phone: voter.phone,
-          aadhar: voter.aadhar,
-          hasVoted: voter.hasVoted,
-          isVerified: voter.isVerified,
-          isRegistered: voter.isRegistered,
-        });
-      }
-      this.setState({ voters: this.state.voters });
-
-      // Loading current voters
-      const voter = await this.state.ElectionInstance.methods
-        .voterDetails(this.state.account)
-        .call();
-      this.setState({
-        currentVoter: {
-          address: voter.voterAddress,
-          name: voter.name,
-          phone: voter.phone,
-          aadhar: voter.aadhar,
-          hasVoted: voter.hasVoted,
-          isVerified: voter.isVerified,
-          isRegistered: voter.isRegistered,
-        },
-      });
+      this.handleReload();
     } catch (error) {
       // Catch any errors for any of the above operations.
       console.error(error);
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details (f12).`
-      );
+      NotificationManager.error("Failed to load web3, accounts, or contract. Check console for details.","error",10000);
     }
   };
+  handleReload = async ()=>{
+    // Total number of voters
+    const voterCount = await this.state.ElectionInstance.methods
+    .getTotalVoter()
+    .call();
+  this.setState({ voterCount: voterCount });
+
+  // Loading all the voters
+  for (let i = 0; i < this.state.voterCount; i++) {
+    const voterAddress = await this.state.ElectionInstance.methods
+      .voters(i)
+      .call();
+    const voter = await this.state.ElectionInstance.methods
+      .voterDetails(voterAddress)
+      .call();
+    this.state.voters.push({
+      address: voter.voterAddress,
+      name: voter.name,
+      phone: voter.phone,
+      aadhar: voter.aadhar,
+      hasVoted: voter.hasVoted,
+      isVerified: voter.isVerified,
+      isRegistered: voter.isRegistered,
+    });
+  }
+  this.setState({ voters: this.state.voters });
+
+  // Loading current voters
+  const voter = await this.state.ElectionInstance.methods
+    .voterDetails(this.state.account)
+    .call();
+  
+  this.setState({
+    currentVoter: {
+      address: voter.voterAddress,
+      name: voter.name,
+      phone: voter.phone,
+      aadhar: voter.aadhar,
+      hasVoted: voter.hasVoted,
+      isVerified: voter.isVerified,
+      isRegistered: voter.isRegistered,
+    },
+  });
+  }
   updateVoterName = (event) => {
     this.setState({ voterName: event.target.value });
   };
@@ -145,8 +148,9 @@ export default class Registration extends Component {
   //     .send({ from: this.state.account, gas: 1000000 });
   //   window.location.reload();
   // };
-  registerAsVoter = async () => {
+  registerAsVoter = async (e) => {
     // Check if the Aadhar card number is already registered
+    e.preventDefault();
     const isAadharRegistered = await this.state.ElectionInstance.methods
         .isAadharRegistered(this.state.voterAadhar)
         .call();
@@ -155,12 +159,20 @@ export default class Registration extends Component {
         alert("Aadhar card number is already registered.");
         return;
     }
+    
 
     // Proceed with registration if the Aadhar card number is not registered
     await this.state.ElectionInstance.methods
         .registerAsVoter(this.state.voterName, this.state.voterPhone, this.state.voterAadhar)
         .send({ from: this.state.account, gas: 1000000 });
-    window.location.reload();
+        
+        if(this.state.currentVoter.isRegistered){
+          NotificationManager.success("Voter Detail Updated", "Updated", 5000);
+        }else {
+          NotificationManager.success("Voter Detail Added", "Register", 5000);
+        }
+        this.handleReload();
+    
 };
   render() {
     if (!this.state.web3) {
@@ -168,6 +180,7 @@ export default class Registration extends Component {
         <>
           {this.state.isAdmin ? <NavbarAdmin /> : <Navbar />}
           <center>Loading Web3, accounts, and contract...</center>
+          <NotificationContainer/>
         </>
       );
     }
@@ -179,8 +192,9 @@ export default class Registration extends Component {
         ) : (
           <>
             <div className="container-item info">
-              <p>Total Verified voters: {this.state.voters.length}</p>
+              <p>Total Verified voters: {this.state.voterCount}</p>
             </div>
+            {!this.state.currentVoter.isVerified &&(
             <div className="container-main">
               <h3>Registration</h3>
               <small>Register to vote.</small>
@@ -261,7 +275,7 @@ export default class Registration extends Component {
                   </button>
                 </form>
               </div>
-            </div>
+            </div>)}
             <div
               className="container-main"
               style={{
@@ -286,6 +300,8 @@ export default class Registration extends Component {
             ) : null}
           </>
         )}
+        
+        <NotificationContainer/>
       </>
     );
   }

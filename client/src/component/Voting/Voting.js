@@ -1,6 +1,10 @@
 // Node modules
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import 'react-notifications/lib/notifications.css';
+import { NotificationManager, NotificationContainer } from "react-notifications";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 // Components
 import Navbar from "../Navbar/Navigation";
@@ -112,9 +116,7 @@ export default class Voting extends Component {
       }
     } catch (error) {
       // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`
-      );
+      NotificationManager.error("Failed to load web3, accounts, or contract. Check console for details.","error",10000);
       console.error(error);
     }
   };
@@ -124,15 +126,28 @@ export default class Voting extends Component {
       await this.state.ElectionInstance.methods
         .vote(id)
         .send({ from: this.state.account, gas: 1000000 });
-      window.location.reload();
+        NotificationManager.success("Successfully ","Voted",5000);
+        setTimeout(function() {
+          window.location.reload();
+      }, 2000);
     };
     const confirmVote = (id, header) => {
-      var r = window.confirm(
-        "Vote for " + header + " with Id " + id + ".\nAre you sure?"
-      );
-      if (r === true) {
-        castVote(id);
-      }
+      
+      confirmAlert({
+        message: "Are you sure ? You want to vote for -> "+ header,
+        buttons: [
+          {
+            
+            label: 'Yes',
+            onClick: () => castVote(id)
+          },
+          {
+            label: 'No',
+            onClick: () => console.log("Not Voted")
+          }
+        ]
+      });
+      
     };
     return (
       <div className="container-item">
@@ -155,6 +170,7 @@ export default class Voting extends Component {
             Vote
           </button>
         </div>
+        <NotificationContainer/>
       </div>
     );
   };
@@ -165,6 +181,7 @@ export default class Voting extends Component {
         <>
           {this.state.isAdmin ? <NavbarAdmin /> : <Navbar />}
           <center>Loading Web3, accounts, and contract...</center>
+          <NotificationContainer/>
         </>
       );
     }
@@ -260,6 +277,7 @@ export default class Voting extends Component {
             </>
           ) : null}
         </div>
+        <NotificationContainer/>
       </>
     );
   }
