@@ -3,8 +3,6 @@
 
 A decentralised voting system based on [Ethereum blockchain](https://ethereum.org/dapps/) technology.
 
-> This started as a final year project for the IT Degree that I was/am pursuing, now aiming to make this more than that.
-
 ## System Workflow
 
 A brief explanation on the basic workflow of the application.
