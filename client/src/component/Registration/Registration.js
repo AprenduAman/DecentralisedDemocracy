@@ -156,7 +156,7 @@ export default class Registration extends Component {
         .call();
 
     if (isAadharRegistered) {
-        alert("Aadhar card number is already registered.");
+      NotificationManager.error("Aadhar card number is already registered.","Alert", 5000);
         return;
     }
     
