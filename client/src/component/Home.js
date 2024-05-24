@@ -108,22 +108,32 @@ export default class Home extends Component {
   };
   // register and start election
   registerElection = async (data) => {
+    // Check if there are at least two candidates registered
+    const totalCandidates = await this.state.ElectionInstance.methods.getTotalCandidate().call();
     
-    await this.state.ElectionInstance.methods
-      .setElectionDetails(
-        data.adminFName.toLowerCase() + " " + data.adminLName.toLowerCase(),
-        data.adminEmail.toLowerCase(),
-        data.adminTitle.toLowerCase(),
-        data.electionTitle.toLowerCase(),
-        data.organizationTitle.toLowerCase()
-      )
-      .send({ from: this.state.account, gas: 1000000 });
-      NotificationManager.success("Election Started ","Started",5000);
-   
-    setTimeout(function() {
-      window.location.reload();
-  }, 2000);
+    if (totalCandidates >= 2) {
+      // Start the election
+      await this.state.ElectionInstance.methods
+        .setElectionDetails(
+          data.adminFName.toLowerCase() + " " + data.adminLName.toLowerCase(),
+          data.adminEmail.toLowerCase(),
+          data.adminTitle.toLowerCase(),
+          data.electionTitle.toLowerCase(),
+          data.organizationTitle.toLowerCase()
+        )
+        .send({ from: this.state.account, gas: 1000000 });
+  
+      NotificationManager.success("Election Started", "Started", 5000);
+  
+      setTimeout(function() {
+        window.location.reload();
+      }, 2000);
+    } else {
+      // Display message to add more candidates
+      NotificationManager.error("Add at least two candidates to start the election.", "Error", 5000);
+    }
   };
+  
 
   render() {
     if (!this.state.web3) {
