@@ -153,8 +153,8 @@ contract Election {
      // Function to check if a voter with the same Aadhar card number already exists
     function isAadharRegistered(string memory _aadhar) public view returns (bool) {
         for (uint i = 0; i < voters.length; i++) {
-            if (keccak256(abi.encodePacked(voterDetails[voters[i]].aadhar)) == keccak256(abi.encodePacked(_aadhar))) {
-                return true;
+            if (keccak256(abi.encodePacked(voterDetails[voters[i]].aadhar)) == keccak256(abi.encodePacked(_aadhar)) && voterDetails[voters[i]].voterAddress != msg.sender ) {
+                return true;    
             }
         }
         return false;
